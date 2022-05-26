@@ -20,6 +20,11 @@ public final class Gameboard {
         positions[position.column][position.row] = player
     }
     
+    public func contains(at position: GameboardPosition) -> Bool{
+        let (column, row) = (position.column, position.row)
+        return positions[column][row] != nil
+    }
+    
     public func clear() {
         self.positions = initialPositions()
     }

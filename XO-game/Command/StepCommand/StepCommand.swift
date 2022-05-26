@@ -28,20 +28,24 @@ class StepCommand {
         self.referee = Referee(gameboard: gameboard)
     }
     
-    func execute() {
+    func execute(delay: Double) {
         guard
             let gameboardView = gameboardView,
             let gameboard = gameboard
         else { return }
         
-        if gameboardView.canPlaceMarkView(at: position) {
-            gameboard.setPlayer(player, at: position)
-            gameboardView.placeMarkView(markViewPrototype.copy(), at: position)
+        if !gameboard.contains(at: position) {
+            gameboard.setPlayer(self.player, at: self.position)
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay ) {
+                gameboardView.placeMarkView(self.markViewPrototype.copy(), at: self.position)
+            }
         } else {
-            gameboardView.removeMarkView(at: position)
+            gameboard.setPlayer(self.player, at: self.position)
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay ) {
+                gameboardView.removeMarkView(at: self.position)
+                gameboardView.placeMarkView(self.markViewPrototype.copy(), at: self.position)
+            }
             
-            gameboard.setPlayer(player, at: position)
-            gameboardView.placeMarkView(markViewPrototype.copy(), at: position)
         }
     }
 }

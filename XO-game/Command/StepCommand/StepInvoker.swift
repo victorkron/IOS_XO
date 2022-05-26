@@ -49,20 +49,37 @@ class StepInvoker {
     
     func executeCommandsIfNeeded() {
         if commands.count == 10 {
+            source?.restartButton.isHidden = true
             for index in 0..<Int(commands.count / 2) {
-                commands[index].execute()
-                if chechWinner() {
-                    commands = []
+                if self.chechWinner() {
+                    self.commands = []
                     return
                 }
-                commands[index + 5].execute()
-                if chechWinner() {
-                    commands = []
+                
+                commands[index].execute(delay: Double(index))
+                if self.chechWinner() {
+                    self.commands = []
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(index)) {
+                        self.source?.restartButton.isHidden = false
+                    }
+                    return
+                }
+                
+                self.commands[index + 5].execute(delay: Double(index) + 0.5)
+                if self.chechWinner() {
+                    self.commands = []
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) + 0.5) {
+                        self.source?.restartButton.isHidden = false
+                    }
                     return
                 }
             }
-            commands = []
-            source?.setFirstPlayerStep()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                self.source?.restartButton.isHidden = false
+                self.commands = []
+                self.source?.setFirstPlayerStep()
+            }
+            
         }
     }
 }
