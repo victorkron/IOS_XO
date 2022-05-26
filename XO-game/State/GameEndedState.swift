@@ -41,15 +41,18 @@ class GameEndedState: GameState {
     }
     
     func addMark(at position: GameboardPosition) { }
+    func addRandomMark() { }
     
     // MARK: - Private functions
     
     private func winnerName(from winner: Player) -> String {
         switch winner {
         case .first:
-            return "1st player"
+            return "1st player win"
         case .second:
-            return "2nd player"
+            return "2nd player win"
+        case .computer:
+            return "computer win"
         }
     }
     

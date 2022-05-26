@@ -16,6 +16,11 @@ class LoggerInvoker {
     private let batchSize = 10
     private var commands: [LogCommand] = []
     
+    
+    private init() {
+        
+    }
+    
     func addCommand(_ command: LogCommand) {
         commands.append(command)
         executeCommandsIfNeeded()

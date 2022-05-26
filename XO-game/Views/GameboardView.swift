@@ -17,6 +17,18 @@ public class GameboardView: UIView {
     
     public private(set) var markViewForPosition: [GameboardPosition: MarkView] = [:]
     
+    public var allPositions = [
+        GameboardPosition(column: 0, row: 0),
+        GameboardPosition(column: 0, row: 1),
+        GameboardPosition(column: 0, row: 2),
+        GameboardPosition(column: 1, row: 0),
+        GameboardPosition(column: 1, row: 1),
+        GameboardPosition(column: 1, row: 2),
+        GameboardPosition(column: 2, row: 0),
+        GameboardPosition(column: 2, row: 1),
+        GameboardPosition(column: 2, row: 2)
+    ]
+    
     // MARK: - Constants
     
     internal struct Constants {

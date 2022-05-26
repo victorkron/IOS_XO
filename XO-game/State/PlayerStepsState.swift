@@ -1,5 +1,5 @@
 //
-//  PlayerInputState.swift
+//  PlayerStepsState.swift
 //  XO-game
 //
 //  Created by Карим Руабхи on 26.05.2022.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class PlayerInputState: GameState {
+class PlayerStepsState: GameState {
     
     // MARK: - Properties
     
@@ -18,6 +18,7 @@ class PlayerInputState: GameState {
     private(set) weak var gameViewController: GameViewController?
     private(set) weak var gameboard: Gameboard?
     private(set) weak var gameboardView: GameboardView?
+    private(set) weak var stepInvoker: StepInvoker?
     
     var isCompleted: Bool = false
     
@@ -50,28 +51,37 @@ class PlayerInputState: GameState {
         log(.playerInput(play: player, position: position))
         guard
             let gameboardView = gameboardView,
-            gameboardView.canPlaceMarkView(at: position)
+            let gameboard = gameboard
         else { return }
         
-        gameboard?.setPlayer(player, at: position)
-        gameboardView.placeMarkView(markViewPrototype.copy(), at: position)
+        let command = StepCommand(
+            position: position,
+            player: player,
+            gameboard: gameboard,
+            gameboardView: gameboardView,
+            markViewPrototype: markViewPrototype
+        )
+        gameViewController?.stepInvoker?.addCommand(command)
         isCompleted = true
     }
     
     func addRandomMark() {
         guard
-            let gameboardView = gameboardView
+            let gameboardView = gameboardView,
+            let gameboard = gameboard,
+            let index = gameViewController?.stepInvoker?.commandsCount()
         else { return }
         
-        for position in gameboardView.allPositions {
-            if gameboardView.canPlaceMarkView(at: position) {
-                gameboard?.setPlayer(player, at: position)
-                gameboardView.placeMarkView(markViewPrototype.copy(), at: position)
-                break
-            } else {
-              continue
-            }
-        }
+        let position = gameboardView.allPositions[index % gameboardView.allPositions.count]
+        let command = StepCommand(
+            position: position,
+            player: player,
+            gameboard: gameboard,
+            gameboardView: gameboardView,
+            markViewPrototype: markViewPrototype
+        )
+        gameViewController?.stepInvoker?.addCommand(command)
+
         isCompleted = true
     }
 }
